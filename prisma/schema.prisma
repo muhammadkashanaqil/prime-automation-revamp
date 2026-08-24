@@ -1,0 +1,122 @@
+// Prisma Schema for Prime Automation Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String?   @default("Admin User")
+  role         String    @default("ADMIN") // ADMIN, EDITOR
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model CaseStudy {
+  id             String    @id @default(cuid())
+  title          String
+  slug           String    @unique
+  status         String    @default("DRAFT") // DRAFT, PUBLISHED
+  clientName     String?
+  industry       String
+  services       String    // JSON array of service tags
+  excerpt        String
+  heroImageUrl   String?
+  heroImageAlt   String?
+  featured       Boolean   @default(false)
+  featuredResult String?
+  metrics        String?   // JSON array of {label, value, note}
+  challenge      String    // JSON rich-text or formatted text
+  solution       String    // JSON rich-text or formatted text
+  implementation String?   // JSON rich-text or formatted text
+  results        String    // JSON rich-text or formatted text
+  technologies   String?   // JSON array of tech stack tags
+  testimonial    String?   // JSON {quote, name, role, company}
+  gallery        String?   // JSON array of image objects
+  seoTitle       String?
+  seoDescription String?
+  ogImageUrl     String?
+  noindex        Boolean   @default(false)
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Post {
+  id             String    @id @default(cuid())
+  title          String
+  slug           String    @unique
+  status         String    @default("DRAFT") // DRAFT, PUBLISHED
+  excerpt        String
+  coverImageUrl  String?
+  coverImageAlt  String?
+  author         String    @default("Prime Automation Team")
+  categories     String    // JSON array of category strings
+  body           String    // JSON rich-text or formatted content
+  featured       Boolean   @default(false)
+  readingTime    String?   @default("5 min read")
+  seoTitle       String?
+  seoDescription String?
+  ogImageUrl     String?
+  noindex        Boolean   @default(false)
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model FAQ {
+  id              String   @id @default(cuid())
+  question        String
+  answer          String   // Text or rich text JSON
+  category        String   // General, services, pricing, process, chatbot, data, etc.
+  relatedServices String?  // JSON array of service slugs
+  featured        Boolean  @default(false)
+  sortOrder       Int      @default(0)
+  status          String   @default("PUBLISHED") // DRAFT, PUBLISHED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SiteSettings {
+  id                    String   @id @default("default")
+  businessName          String   @default("Prime Automation Pvt. Ltd.")
+  email                 String   @default("info@primeautomationpl.com")
+  phone                 String?  @default("+1 (800) 555-AUTO")
+  schedulingUrl         String?  @default("https://cal.com/primeautomation/free-audit")
+  socialLinks           String?  // JSON {linkedin, twitter, github, youtube}
+  defaultSeoTitle       String?  @default("Prime Automation | Custom AI & Operational Automation Systems")
+  defaultSeoDescription String?  @default("Prime Automation builds enterprise-grade AI chatbots, automated workflows, data pipelines, and custom AI integrations that scale your operations.")
+  footerText            String?  @default("Enterprise-grade AI systems, intelligent workflows, and data pipelines engineered for measurable ROI.")
+  chatbotWelcomeMessage String?  @default("👋 Hello! Welcome to Prime Automation. I can help answer questions about our AI services, explain our automation process, or help you book a free audit. How can I assist you today?")
+  updatedAt             DateTime @updatedAt
+}
+
+model Lead {
+  id          String   @id @default(cuid())
+  fullName    String
+  workEmail   String
+  company     String?
+  website     String?
+  phone       String?
+  primaryNeed String
+  message     String
+  budgetRange String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+  source      String   @default("CONTACT_FORM") // CONTACT_FORM, CHATBOT
+  status      String   @default("NEW") // NEW, CONTACTED, QUALIFIED, CLOSED
+  createdAt   DateTime @default(now())
+}
