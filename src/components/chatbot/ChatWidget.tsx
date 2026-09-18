@@ -198,18 +198,21 @@ export default function ChatWidget() {
   };
 
   const handleActionClick = (action: string) => {
-    if (action.toLowerCase().includes("audit") || action.toLowerCase().includes("book")) {
+    const lower = action.toLowerCase();
+    // Navigation actions
+    if (lower.includes("audit") || lower.includes("book") || lower.includes("contact page") || lower.includes("call")) {
       window.location.href = "/contact";
       return;
     }
-    if (action.toLowerCase().includes("service")) {
+    if (lower.includes("service") || lower.includes("ai agent") || lower.includes("workflow automation")) {
       window.location.href = "/services";
       return;
     }
-    if (action.toLowerCase().includes("case study") || action.toLowerCase().includes("proof")) {
+    if (lower.includes("case stud") || lower.includes("proof") || lower.includes("portfolio")) {
       window.location.href = "/case-studies";
       return;
     }
+    // Send as a message for conversational actions
     handleSendMessage(action);
   };
 
